@@ -1,2 +1,43 @@
 //Show Databases
-show dbs;
+// show dbs;
+// use StudentDB;
+db.createCollection("students");
+
+//insert one document..
+db.students.insertOne({
+    id : 1329,
+    name : "Dhruv",
+    age : 20
+});
+
+db.students.find();
+
+db.students.insertMany([
+    {
+    id : 1294,
+    name : "Hari",
+    age : 22
+    },
+    {
+    id : 1312,
+    name : "Krutik",
+    age : 19
+    }
+]);
+
+//update...
+db.students.updateOne(
+    {id : 1294},//where
+    {$set : {"age" : 21}} // which opr set to update value
+);
+
+//delete
+
+// for deleting collection..
+db.students.deleteOne({id: 1312});
+
+db.students.updateOne(
+    {id: 1312}, // where to update
+    {$unset: {age: ""}} // remove the "age" field
+);
+

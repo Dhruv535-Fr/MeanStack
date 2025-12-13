@@ -1,0 +1,172 @@
+ /*Execute all queries in vscode using db.employees. Use insertOne(), insertMany(), find(), updateOne(), updateMany(), deleteOne(), deleteMany() for CRUD. Apply operators like $gt, $in, $regex, $elemMatch, $set, $push, $pull, $inc. Create indexes with createIndex().*/
+ 
+ //CRUD Operations (Questions 1-15)
+
+//Q.1 Insert one employee document for "Alice Johnson" (email: alice.johnson@company.com, age: 28, department: "HR", salary: 65000).
+
+
+db.employees.insertOne({
+  name: "Alice Johnson",
+  email: "alice.johnson@company.com",
+  age: 28,
+  department: "HR",
+  salary: 65000
+});
+
+//Q.2 Insert 5 employees in one operation for Engineering department (ages 25-35, salaries 70000-95000).
+
+db.employees.insertMany([
+    {
+        name: "Prit Patel",
+        email: "patelprit@company.com",
+        age: 27,
+        department: "Engineering",
+        salary: 72000
+    },
+    {
+        name: "Dhruv Parmar",
+        email: "parmardhruv@company.com",
+        age: 25,
+        department: "Engineering",
+        salary: 72500
+    },
+    {
+        name: "Prince Patel",
+        email: "patelprince@company.com",
+        age: 28,
+        department: "Engineering",
+        salary: 85000
+    },
+    {
+        name: "Krutik Chamtha",
+        email: "krutikchamtha@company.com",
+        age: 26,
+        department: "Engineering",
+        salary: 90000
+    },
+    {
+        name: "Hari Shah",
+        email: "harilal@company.com",
+        age: 30,
+        department: "Engineering",
+        salary: 93000
+    }
+]);
+
+//Q.3 Update Alice Johnson's performance_score to 4.5 using updateOne().
+
+db.employees.updateOne({ name: "Alice Johnson" }, { $set: { performance_score: 4.5 } });
+
+//Q.4 Increment salary by 5000 for all active Engineering employees using updateMany().
+
+db.employees.updateMany(
+  { department: "Engineering"},
+  { $inc: { salary: 5000 } }
+);
+
+//Q.5 Add project "Project Gamma" (role: "Manager", status: "active") to John's projects array.
+
+//First Add John
+db.employees.insertOne({
+  name: "John Smith",
+  email: "johnsmith@company.com",
+  age: 32,
+  department: "Engineering",
+  salary: 73000
+});
+
+
+db.employees.updateOne(
+  { name: "John Smith" },
+  { $push: { projects: { name: "Project Gamma", role: "Manager", status: "active" } } }
+);
+
+//Q 6. Remove "Project Beta" from all employees using $pull.
+
+db.employees.updateMany(
+  {},
+  { $pull: { projects: { name: "Project Beta" } } }
+);
+
+//Q 7. Set is_active: false for employees with performance_score below 3.0.
+
+db.employees.updateMany(
+  {performance_score: {$lt : 3.0} },
+  {$set : {is_active : false} }
+);
+
+//Q 8.Replace entire address for John Smith with new address (street: "456 Innovation Ave", city: "Seattle", state: "WA", zip: "98101").
+
+db.employees.updateOne(
+  { name : "John Smith" },
+  { 
+    $set : {
+      address :{
+        street: "456 Innovation Ave",
+        city: "Seattle",
+        state: "WA",
+        zip: "98101"
+      }
+    }
+  }
+);
+
+//Q 9. Delete one employee with email "johnsmith@company.com".
+
+db.employees.deleteOne(
+  {email : "johnsmith@company.com"}
+);
+
+//Q 10.Delete all inactive employees hired before 2022.
+
+db.employees.deleteMany(
+  { is_active : false , hire_date : { $lt : ISODate("2022-01-01")}}
+);
+//Q11. Insert phone number "415-555-0103" to Alice Johnson's phone_numbers array
+
+db.employees.updateOne(
+  { email: "alice.johnson@company.com" },
+  { $push: { phone_numbers: "415-555-0103" } }
+);
+
+
+//Q 12. Unset the updated_at field for all HR employees.
+
+db.employees.updateMany(
+  { department : "HR" },
+  { $unset : { updated_at : "" } }
+);
+
+//Q 13. Rename salary field to annual_salary for all documents.
+
+db.employees.updateMany(
+  {},
+  { $rename: { salary: "annual_salary" } }
+);
+
+//Q 14. Add bonus_eligible: true field for top 3 performance_score employees (score > 4.5).
+
+// db.employees.updateMany(
+//   { performance_score : { $gt : 4.5 } },
+//   { $set : { bonus_eligible: "true" } }
+// );
+
+var topEmployees = db.employees
+  .find({ performance_score: { $gt: 4.5 } })
+  .sort({ performance_score: -1 })
+  .limit(3)
+  .toArray()
+  .map(emp => emp._id);
+
+db.employees.updateMany(
+  { _id: { $in: topEmployees } },
+  { $set: { bonus_eligible: true } }
+);
+
+// Q 15. Delete the entire address field from all California employees.
+
+db.employees.updateMany(
+  { "address.state": "CA" },
+  { $unset: { address: "" } }
+);
+
