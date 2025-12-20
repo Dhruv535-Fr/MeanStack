@@ -156,7 +156,7 @@ var topEmployees = db.employees
   .sort({ performance_score: -1 })
   .limit(3)
   .toArray()
-  .map(emp => emp._id);
+  .map(emp => emp._id);n
 
 db.employees.updateMany(
   { _id: { $in: topEmployees } },
