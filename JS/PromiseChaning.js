@@ -11,7 +11,7 @@ function AsyncFun2(){
     setTimeout(() => {
       console.log("Data2:",456);
       resolve("success!");
-    },5000);
+    },3000);
   });
 }
 
@@ -26,3 +26,15 @@ p1.then((res) =>{
         console.log("Data2 is fetched...",res);
     });
 });
+//or.. we can directly use this..
+
+setTimeout(() =>{
+  console.log("Fetching Data again using second method:> \nFetching data1....");
+  AsyncFun1().then((res) =>{
+    console.log("Data1 is fetched...",res);
+    console.log("Now Fetching data2....");
+    return AsyncFun2();
+  }).then((res)=>{
+    console.log("Data2 is fetched...",res);
+  });
+},7000);

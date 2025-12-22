@@ -35,18 +35,3 @@ newPromise.then((res) =>{
 
 //if get rejected then it will not run.. so we can use .catch that also contain err parameter default....
 
-
-
-
-
-
-// const promise = new Promise((resolve, reject) => {
-//   // simulate work
-//   setTimeout(() => {
-//     resolve("Success!");  // "done, here's result"
-//     // or reject("Error!");
-//   }, 1000);
-// });
-// promise.then(result => {
-//   console.log(result); // "Success!" (runs after 1 second)
-// });
