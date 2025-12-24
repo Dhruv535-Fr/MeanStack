@@ -1,0 +1,86 @@
+db.createCollection("faculty", {
+// Create 'faculty' collection with schema validation
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "age", "major", "Salary", "Role", "customId"],
+      properties: {
+        name: { bsonType: "string" },
+        age: { bsonType: "int", minimum: 18 },
+        major: { bsonType: "string" },
+        Salary: { bsonType: "int", minimum: 0 },
+        Role: { bsonType: "string" },
+        customId: { bsonType: "string" }
+      }
+    }
+  },
+  validationLevel: "moderate"
+})
+
+db.faculty.insertOne(
+    {
+        name: "madhu", 
+        age: 23, 
+        major: "Computer Science",
+        Salary: 80000,
+        Role: "Senior Supervisor",
+        customId: "CT032"
+    })
+
+// Insert a sample faculty document
+
+
+
+db.faculty.find()
+//schema updating after creating collection
+
+// Find all documents in faculty collection
+db.runCommand({
+  collMod: "faculty",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "age", "major", "Salary", "Role", "customId"],
+      properties: {
+        name: {
+          bsonType: "string"
+        },
+        age: {
+          bsonType: "int",
+          minimum: 18
+        },
+        major: {
+          bsonType: "string"
+        },
+        Salary: {
+          bsonType: "int",
+          minimum: 0
+        },
+        Role: {
+          bsonType: "string"
+        },
+        customId: {
+          bsonType: "string"
+        }
+      }
+    }
+  },
+  validationLevel: "moderate"
+})
+
+// Update schema validation for 'faculty' collection
+
+
+//show schema
+db.getCollectionInfos({name: "faculty"})
+
+// Show schema details for 'faculty' collection
+
+//delete schema validation
+db.runCommand({
+  collMod: "faculty",
+  validator: {},
+  validationLevel: "off"
+})
+
+// Remove schema validation from 'faculty' collection
