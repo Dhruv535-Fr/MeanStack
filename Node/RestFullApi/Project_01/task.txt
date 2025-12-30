@@ -1,0 +1,16 @@
+// Task to create rest api..
+
+GET /users - HTML Document Render..
+
+REST
+
+1. GET /api/users - List all user in json format
+
+2. GET /api/users/1 - List user related to that ID
+
+/api/users/:id -> here ID will be dynamic so (:id)  Dynamic path parameter
+
+3. POST /api/users - Create new user..
+
+4. Patch /api/users/id - update user of that ID
+

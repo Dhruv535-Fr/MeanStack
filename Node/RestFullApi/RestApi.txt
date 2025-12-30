@@ -1,0 +1,143 @@
+// ============================================
+// RESTful API Standards & Best Practices
+// ============================================
+
+// WHAT IS REST?
+// ────────────────────────────────────────────
+/*
+   REST = Representational State Transfer
+   
+   It's an architectural style (not a protocol or standard) for designing 
+   networked applications. Created by Roy Fielding in 2000.
+   
+   Key Idea: Treat server resources (data) as "things" that can be 
+             created, read, updated, or deleted using standard HTTP methods.
+   
+   Why Use REST?
+   ─────────────
+   ✓ Scalable - Can handle millions of requests
+   ✓ Simple - Uses existing HTTP infrastructure
+   ✓ Stateless - Each request is independent
+   ✓ Platform Independent - Works with any language/framework
+   ✓ Industry Standard - Most modern APIs follow REST principles
+*/
+
+// 1. CLIENT-SERVER ARCHITECTURE
+// ────────────────────────────────────────────
+/* 
+   Traditional Approach (SSR - Server Side Rendering):
+   ───────────────────────────────────────────────────
+   [Client] ──(Request for data)──> [Server]
+   [Client] <──(HTML Response)───── [Server]
+   
+   Problem: HTML responses are difficult to handle across different client types
+            (Web, Android, iOS, Smart Devices like Alexa, etc.)
+   
+   RESTful Approach:
+   ─────────────────
+   [Client] ──(Request for data)──> [Server]
+   [Client] <──(JSON Response)────── [Server]
+   
+   Benefit: JSON format is universal and easy to parse across all platforms.
+            Each client can handle the presentation layer independently.
+*/
+
+// 2. HTTP METHODS - USE THEM CORRECTLY
+// ────────────────────────────────────────────
+/* 
+   Proper Usage:
+   ─────────────
+   GET    /user       → Retrieve user data (Read)
+   POST   /user       → Create new user (Create)
+   PATCH  /user/:id   → Partially update user details (Partial Update)
+   PUT    /user/:id   → Completely replace user data (Full Update)
+   DELETE /user/:id   → Delete user (Delete)
+   
+   ❌ WRONG PRACTICES TO AVOID:
+   ───────────────────────────
+   × POST /deleteUser     → Don't use POST for deletion
+   × POST /updateUser     → Don't use POST for updates
+   × GET  /createUser     → Don't use GET to modify data
+   
+   ✓ Follow RESTful conventions to maintain consistency and predictability
+*/
+
+// 3. STATELESS COMMUNICATION
+// ────────────────────────────────────────────
+/*
+   Every request must contain ALL information needed to process it.
+   Server doesn't store client session data.
+   
+   Example:
+   ────────
+   ✓ GOOD: Send authentication token with each request
+           GET /user/profile
+           Headers: { Authorization: "Bearer token123" }
+   
+   ❌ BAD:  Rely on server remembering previous login
+           (Server shouldn't remember "this client logged in earlier")
+*/
+
+// 4. RESOURCE-BASED URLs (Nouns, Not Verbs)
+// ────────────────────────────────────────────
+/*
+   ✓ CORRECT:
+   ──────────
+   GET    /users          → Get all users
+   GET    /users/123      → Get specific user
+   POST   /users          → Create user
+   DELETE /users/123      → Delete user
+   GET    /users/123/orders → Get orders for a user
+   
+   ❌ WRONG:
+   ─────────
+   × GET  /getUsers
+   × POST /createUser
+   × GET  /deleteUser/123
+   × GET  /getUserOrders
+   
+   Rule: URLs should represent RESOURCES (things), not ACTIONS
+*/
+
+// 5. HTTP STATUS CODES
+// ────────────────────────────────────────────
+/*
+   Use proper status codes to communicate results:
+   
+   2xx - Success
+   ────────────
+   200 OK              → Request succeeded
+   201 Created         → New resource created
+   204 No Content      → Success, but no data to return
+   
+   4xx - Client Errors
+   ───────────────────
+   400 Bad Request     → Invalid data sent
+   401 Unauthorized    → Authentication required
+   403 Forbidden       → Authenticated but not allowed
+   404 Not Found       → Resource doesn't exist
+   
+   5xx - Server Errors
+   ───────────────────
+   500 Internal Error  → Server crashed
+   503 Service Unavailable → Server temporarily down
+*/
+
+// 6. VERSIONING YOUR API
+// ────────────────────────────────────────────
+/*
+   Always version your API to prevent breaking existing clients:
+   
+   Examples:
+   ─────────
+   /api/v1/users
+   /api/v2/users
+   
+   Or use headers:
+   Accept: application/vnd.myapi.v1+json
+*/
+
+// ============================================
+// SUMMARY: These ARE industry-standard practices
+// used by major companies (Google, Facebook, Twitter, etc.)
+// ============================================
