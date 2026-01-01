@@ -8,6 +8,25 @@ const PORT = 8000;
 
 //middleware - to identify post request data and convert it into js object...
 app.use(express.urlencoded({extended : false}));
+
+/* Create your own MIDDLEWARE...it contains (req,res,next) we can modify req/res add new property
+next -> will call next middleware in stack*/
+
+app.use((req,res,next) => {
+    console.log("This is Middleware 1!");
+    req.newProperty = "Adding new Property"; //add new propery
+    next(); // trasfer control to next middleware in stack
+});
+
+app.use((req,res,next) => {
+    
+    fs.appendFile('log.txt',`${Date.now()}: ${req.method} Path: ${req.path}\n`,(err,data) =>{
+        next();
+    });
+    // return res.json({ "Message" : req.newProperty }); // we can also end res if condition not mate
+});
+
+
 //(SSR)--> sending HTML 
 
 app.get("/users",(req,res)=>{
