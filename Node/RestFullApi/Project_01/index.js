@@ -41,7 +41,7 @@ app.get("/users",(req,res)=>{
 //RestAPI -> Sending json format..
 
 app.get("/api/users",(req,res)=>{ //grtting data of all user..
-    return res.json(users); 
+    return res.status(200).json(users); 
 });
 
 // app.get("/api/users/:id",(req,res)=>{ //id dynamic variable..
@@ -57,9 +57,10 @@ app.route("/api/users/:id")
 .get((req,res)=>{ //id dynamic variable..
     const id = Number(req.params.id);
     const user = users.find((user) => user.id === id);
-    return res.json(user);
+    if(!user) res.status(404).json({"err" : "User Not Found"}); 
+    return res.status(200).json(user);
 })
-.patch((req,res)=>{
+.patch((req,res)=>{ 
     const body = req.body;
     const id = Number(req.params.id);
     const userIndex = users.findIndex((user) => user.id === id);
@@ -95,9 +96,12 @@ app.route("/api/users/:id")
 app.post("/api/users",(req,res)=>{ 
     const body = req.body;
     console.log(body);
+    if(!body || !body.first_name || !body.last_name || !body.email || !body.gender || !body.job_title){
+        return res.status(400).json({ "Bad Request" : "Required all field"});
+    }
     users.push({...body,id : users.length + 1});
     fs.writeFile("./MOCK_DATA.json",JSON.stringify(users),(err,data) =>{
-        return res.json({ "Status" : "Success" , id : users.length})
+        return res.status(201).json({ "Status" : "Success" , id : users.length})
     });
 });
 
